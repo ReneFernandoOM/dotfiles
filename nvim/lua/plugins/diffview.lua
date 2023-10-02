@@ -1,12 +1,12 @@
 return {
-  'sindrets/diffview.nvim',
+  "sindrets/diffview.nvim",
   config = function()
-    local diffview = require 'diffview'
-    vim.keymap.set('n', '<leader>fh', '<cmd>DiffviewFileHistory %<cr>', { desc = 'Open [F]ile [H]istory' })
-    diffview.setup {
+    local diffview = require("diffview")
+    vim.keymap.set("n", "<leader>fh", "<cmd>DiffviewFileHistory %<cr>", { desc = "Open [F]ile [H]istory" })
+    diffview.setup({
       view = {
         merge_tool = {
-          layout = 'diff3_mixed',
+          layout = "diff3_mixed",
           disable_diagnostics = true,
           winbar_info = true,
         },
@@ -15,6 +15,6 @@ return {
           winbar_info = false,
         },
       },
-    }
+    })
   end,
 }

@@ -1,55 +1,60 @@
 local on_attach = function(client, bufnr)
   local nmap = function(keys, func, desc)
     if desc then
-      desc = 'LSP: ' .. desc
+      desc = "LSP: " .. desc
     end
-    vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
+    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
+  nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
+  nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
 
-  nmap('gd', vim.lsp.buf.definition, '[G]oto [D]efinition')
-  nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-  nmap('gI', vim.lsp.buf.implementation, '[G]oto [I]mplementation')
-  nmap('<leader>D', vim.lsp.buf.type_definition, 'Type [D]efinition')
-  nmap('<leader>ds', require('telescope.builtin').lsp_document_symbols, '[D]ocument [S]ymbols')
-  nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
+  nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
+  nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
+  nmap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
+  nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
+  nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
+  nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
   -- nmap('<leader>ws', require('telescope.builtin').lsp_workspace_symbols, '[W]orkspace [S]ymbols')
 
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  nmap("K", vim.lsp.buf.hover, "Hover Documentation")
+  nmap("<C-s>", vim.lsp.buf.signature_help, "Signature Documentation")
 end
 
 return {
   -- LSP Configuration & Plugins
-  'neovim/nvim-lspconfig',
+  "neovim/nvim-lspconfig",
   dependencies = {
     -- Automatically install LSPs to stdpath for neovim
-    { 'williamboman/mason.nvim', config = true },
-    'williamboman/mason-lspconfig.nvim',
+    { "williamboman/mason.nvim", config = true },
+    "williamboman/mason-lspconfig.nvim",
 
     -- Useful status updates for LSP
-    { 'j-hui/fidget.nvim', opts = {} },
+    { "j-hui/fidget.nvim", opts = {} },
 
     -- Additional lua configuration, makes nvim stuff amazing!
-    'folke/neodev.nvim',
-    'ray-x/lsp_signature.nvim',
+    "folke/neodev.nvim",
+    "ray-x/lsp_signature.nvim",
   },
   config = function()
     -- Important to load Mason first
-    require('mason').setup()
+    require("mason").setup()
 
     -- Setum neovim lua config
-    require('neodev').setup()
+    require("neodev").setup()
 
     -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
     local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+    capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+    -- Neovim hasn't added foldingRange to default capabilities, users must add it manually
+    capabilities.textDocument.foldingRange = {
+      dynamicRegistration = false,
+      lineFoldingOnly = true,
+    }
 
     -- Should be loaded after mason
     -- Ensure the servers above are installed
-    local mason_lspconfig = require 'mason-lspconfig'
+    local mason_lspconfig = require("mason-lspconfig")
 
     local servers = {
       -- clangd = {},
@@ -66,21 +71,21 @@ return {
       },
     }
 
-    mason_lspconfig.setup {
+    mason_lspconfig.setup({
       ensure_installed = vim.tbl_keys(servers),
-    }
+    })
 
-    mason_lspconfig.setup_handlers {
+    mason_lspconfig.setup_handlers({
       function(server_name)
-        require('lspconfig')[server_name].setup {
+        require("lspconfig")[server_name].setup({
           capabilities = capabilities,
           on_attach = on_attach,
           settings = servers[server_name],
-        }
+        })
       end,
-    }
+    })
     -- Diagnostic message setup
-    vim.diagnostic.config {
+    vim.diagnostic.config({
       -- Keep virtual text simple to avoid clutter
       virtual_text = {
         signs = true,
@@ -91,25 +96,25 @@ return {
         signs = true,
         severity_sort = true,
         format = function(diagnostic)
-          return string.format('%s [%s] (%s)', diagnostic.message, diagnostic.code, diagnostic.source)
+          return string.format("%s [%s] (%s)", diagnostic.message, diagnostic.code, diagnostic.source)
         end,
-        suffix = '',
+        suffix = "",
       },
-    }
+    })
     -- Signature help
-    require('lsp_signature').setup {
+    require("lsp_signature").setup({
       bind = true,
       hint_enable = false,
       handler_opts = {
-        border = 'rounded',
+        border = "rounded",
       },
-    }
+    })
 
     -- Autoformat setup --
     -- Switch for controlling whether you want autoformatting.
     --  Use :LspFormatToggle to toggle autoformatting on or off
     local format_is_enabled = true
-    vim.api.nvim_create_user_command('LspFormatToggle', function()
+    vim.api.nvim_create_user_command("LspFormatToggle", function()
       format_is_enabled = not format_is_enabled
     end, {})
 
@@ -119,7 +124,7 @@ return {
     local _augroups = {}
     local get_formatting_augroup = function(client)
       if not _augroups[client.id] then
-        local group_name = 'lsp-attach-' .. client.name
+        local group_name = "lsp-attach-" .. client.name
         local id = vim.api.nvim_create_augroup(group_name, { clear = true })
         _augroups[client.id] = id
       end
@@ -128,8 +133,8 @@ return {
     end
 
     -- Setup for autoformatting
-    vim.api.nvim_create_autocmd('LspAttach', {
-      group = vim.api.nvim_create_augroup('lsp-attach-main', { clear = true }),
+    vim.api.nvim_create_autocmd("LspAttach", {
+      group = vim.api.nvim_create_augroup("lsp-attach-main", { clear = true }),
       -- This is where we attach the autoformatting for reasonable clients
       callback = function(args)
         local client_id = args.data.client_id
@@ -142,7 +147,7 @@ return {
         end
 
         -- Sets up an formatting AutoCommand
-        vim.api.nvim_create_autocmd('BufWritePre', {
+        vim.api.nvim_create_autocmd("BufWritePre", {
           group = get_formatting_augroup(client),
           buffer = bufnr,
           callback = function()
@@ -152,7 +157,7 @@ return {
             end
 
             -- Tsserver usually works poorly.
-            if client.name == 'tsserver' then
+            if client.name == "tsserver" then
               return
             end
             -- From the format_is_enabled variable defined above
@@ -160,12 +165,12 @@ return {
               return
             end
 
-            vim.lsp.buf.format {
+            vim.lsp.buf.format({
               async = false,
               filter = function(c)
                 return c.id == client.id
               end,
-            }
+            })
 
             -- Re-enable diagnostics, following this: idk if I need it
             -- https://www.reddit.com/r/neovim/comments/15dfx4g/help_lsp_diagnostics_are_not_being_displayed/?utm_source=share&utm_medium=web2x&context=3
