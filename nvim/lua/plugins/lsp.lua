@@ -166,6 +166,7 @@ return {
             end
 
             vim.lsp.buf.format({
+              timeout_ms = 3000,
               async = false,
               filter = function(c)
                 return c.id == client.id

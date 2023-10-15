@@ -7,5 +7,6 @@ return {
         ext = ".md",
       },
     }
+    vim.g.vimwiki_map_prefix = "<Leader>k"
   end,
 }
