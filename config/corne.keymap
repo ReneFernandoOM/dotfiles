@@ -45,7 +45,7 @@
 // | @ | ^ | $ | [ | ] | & |   |     |      |      |     |     |      |
 //                    | + | - | SPC |   	|  | |  |
                         bindings = <
-   &kp GRAVE &kp EXCL &kp EQUAL &kp LBKT &kp RBKT &kp GT	&trans &trans &trans &trans &trans &trans
+   &kp GRAVE &kp EXCL &kp EQUAL &kp LBRC &kp RBRC &kp GT	&trans &trans &trans &trans &trans &trans
    &kp HASH  &kp STAR &kp PRCNT &kp LPAR &kp RPAR &kp LT   	&trans &kp RCTRL &kp RSHFT &kp RGUI &kp RALT &trans
    &kp AT   &kp CARET &kp DLLR  &kp LBKT &kp RBKT &kp AMPS      &trans &trans &trans &trans &trans &trans
                         &kp KP_PLUS &kp KP_MINUS &kp SPACE      &trans &trans &trans
