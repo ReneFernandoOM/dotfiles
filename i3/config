@@ -230,9 +230,9 @@ exec xrandr --output DP-2-2 --auto --right-of DP-2-3
 exec xrandr --output DP-2-2 --auto --rotate right
 
 # Keyboard layout
-exec setxkbmap -layout us
+exec --no-startup-id setxkbmap -layout us
 # git@github.com-ReneFernandoOM:ReneFernandoOM/dotfiles.git
 # disable mouse acceleartion
-exec xinput --set-prop 15 'libinput Accel Profile Enabled' 0, 1
+exec --no-startup-id xinput --set-prop 'Logitech USB Receiver' 'libinput Accel Profile Enabled' 0, 1
 
 focus_wrapping force
