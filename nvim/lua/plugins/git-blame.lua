@@ -11,8 +11,8 @@ return {
     vim.keymap.set(
       "n",
       "<leader>goc",
-      "<cmd>[G]itBlame[O]pen[C]ommitURL<cr>",
-      { silent = true, noremap = true, desc = "Open Commit Url in browser" }
+      "<cmd>GitBlameOpenCommitURL<cr>",
+      { silent = true, noremap = true, desc = "[G]itBlame[O]pen[C]ommitURL" }
     )
   end,
 }
