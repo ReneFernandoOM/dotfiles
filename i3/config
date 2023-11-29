@@ -225,6 +225,7 @@ default_border pixel 0
 default_floating_border pixel 0
 
 # xrandr config
+exec --no-startup-id xrandr --output DP-2-3 --auto --primary
 exec --no-startup-id xrandr --output DP-1 --auto --left-of DP-2-3
 exec --no-startup-id xrandr --output DP-2-2 --auto --right-of DP-2-3
 exec --no-startup-id xrandr --output DP-2-2 --auto --rotate right
