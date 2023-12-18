@@ -20,7 +20,7 @@ return {
           prefer_local = "node_modules/.bin",
         }),
         -- Python
-        formatting.black,
+        formatting.ruff,
         -- Lua
         formatting.stylua,
       },

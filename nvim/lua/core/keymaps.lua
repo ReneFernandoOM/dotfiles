@@ -10,8 +10,8 @@ vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = tr
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
 -- Go to start or end of line easier
-vim.keymap.set({ "n", "v" }, "L", "g_")
-vim.keymap.set({ "n", "v" }, "H", "^")
+vim.keymap.set({ "n", "v", "o" }, "L", "g_")
+vim.keymap.set({ "n", "v", "o" }, "H", "^")
 
 -- Center screen after jump
 vim.keymap.set("n", "n", "nzz")
