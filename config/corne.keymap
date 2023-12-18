@@ -92,7 +92,7 @@
                         bindings = <
    &trans &trans &trans &trans &trans &trans			&trans &trans  &trans &trans &trans &trans
    &trans &kp LALT &kp LGUI &kp LSHFT &kp LCTRL &trans		&kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
-   &trans &trans &trans &trans &trans &trans			&kp END &kp PG_DN &kp PG_UP &kp HOME &trans &trans
+   &trans &trans &trans &trans &trans &trans			&kp HOME &kp PG_DN &kp PG_UP &kp END &trans &trans
         	&trans &trans &trans   		    			&kp BSPC   &trans    &trans
                         >;
                 };
