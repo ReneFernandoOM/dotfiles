@@ -9,6 +9,10 @@ vim.keymap.set({ "n", "v" }, "<Space>", "<Nop>", { silent = true })
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
 
+-- Stay in indent mode
+vim.keymap.set("v", ">", ">gv", { noremap = true, silent = true })
+vim.keymap.set("v", "<", "<gv", { noremap = true, silent = true })
+
 -- Go to start or end of line easier
 vim.keymap.set({ "n", "v", "o" }, "L", "g_")
 vim.keymap.set({ "n", "v", "o" }, "H", "^")
@@ -31,10 +35,10 @@ vim.keymap.set("v", "<A-k>", ":m '<-2<CR>gv=gv", { desc = "Move lines", silent =
 vim.keymap.set("i", "<A-k>", "<Esc>:m .-2<CR>==gi", { desc = "Move lines", silent = true })
 
 -- Move to window using the <ctrl> hjkl keys
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to left window", remap = true })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to lower window", remap = true })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to upper window", remap = true })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window", remap = true })
+-- vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to left window", remap = true })
+-- vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to lower window", remap = true })
+-- vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to upper window", remap = true })
+-- vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to right window", remap = true })
 
 -- Resize window using <ctrl> arrow keys
 vim.keymap.set("n", "<C-Up>", "<cmd>resize +2<cr>", { desc = "Increase window height" })
@@ -47,9 +51,14 @@ vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous dia
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
 
+<<<<<<< Updated upstream
 if os.getenv("TMUX") then
   vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>")
   vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>")
   vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>")
   vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>")
 end
+=======
+-- Toggle Word Wrap --
+vim.keymap.set("n", "<leader>tw", ":set wrap!<CR>")
+>>>>>>> Stashed changes
