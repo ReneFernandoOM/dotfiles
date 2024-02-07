@@ -236,4 +236,7 @@ exec_always --no-startup-id setxkbmap -layout us
 # disable mouse acceleartion
 exec_always --no-startup-id xinput --set-prop 'Logitech USB Receiver' 'libinput Accel Profile Enabled' 0, 1
 
+# picom
+exec_always --no-startup-id picom -b
+
 focus_wrapping force
