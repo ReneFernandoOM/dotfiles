@@ -46,3 +46,10 @@ vim.keymap.set("n", "<C-Right>", "<cmd>vertical resize +2<cr>", { desc = "Increa
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
 vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
+
+if os.getenv("TMUX") then
+  vim.keymap.set("n", "<C-h>", "<cmd>TmuxNavigateLeft<cr>")
+  vim.keymap.set("n", "<C-j>", "<cmd>TmuxNavigateDown<cr>")
+  vim.keymap.set("n", "<C-k>", "<cmd>TmuxNavigateUp<cr>")
+  vim.keymap.set("n", "<C-l>", "<cmd>TmuxNavigateRight<cr>")
+end
