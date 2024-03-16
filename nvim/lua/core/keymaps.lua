@@ -59,3 +59,7 @@ if os.getenv("TMUX") then
 end
 -- Toggle Word Wrap --
 vim.keymap.set("n", "<leader>tw", ":set wrap!<CR>")
+
+-- Tab keymaps
+vim.keymap.set("n", "<leader>tn", ":tabNext<CR>")
+vim.keymap.set("n", "<leader>tc", ":tabclose<CR>")
