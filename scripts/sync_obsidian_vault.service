@@ -1,0 +1,13 @@
+[Unit]
+Description=Script in charge of keeping obsidian vault in sync
+
+[Service]
+Type=simple
+#User=
+#Group=
+ExecStart=/usr/local/bin/sync_obsidian_vault.sh
+Restart=on-failure
+StandardOutput=file:%h/log_file
+
+[Install]
+WantedBy=default.target

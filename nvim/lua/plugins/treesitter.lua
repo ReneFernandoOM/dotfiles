@@ -25,6 +25,8 @@ return {
         "vim",
         "css",
         "html",
+        "markdown",
+        "markdown_inline",
       },
 
       auto_install = true,
