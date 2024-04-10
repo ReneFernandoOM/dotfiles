@@ -239,4 +239,7 @@ exec_always --no-startup-id xinput --set-prop 'Logitech USB Receiver' 'libinput 
 # picom
 exec_always --no-startup-id picom -b
 
+# Keep obsidian vault in sync
+exec_always systemctl --user start sync_obsidian_vault.service
+
 focus_wrapping force
