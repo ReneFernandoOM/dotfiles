@@ -152,5 +152,32 @@ dksh() {
   docker exec -it $1 bash
 }
 
+export PATH=$PATH:/usr/local/go/bin
+
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+export PATH="$PATH:/usr/local/nvim/bin"
+export PATH="$PATH:/$HOME/go/bin"
+
+# Ansible tests aliases
+updateDjangoDb() {
+  cd ~/Documents/elementary/ansible-config/tests/integration-tests/
+  docker cp integration_tests_clean_dbs.py django-app-local-server:/code/scripts
+  docker cp integration_tests_inject_data.py django-app-local-server:/code/scripts
+  cd src
+  docker cp ./base_inject_data_config.json django-app-local-server:/code
+  echo "files copied to django container"
+  docker exec django-app-local-server python manage.py runscript integration_tests_clean_dbs
+  docker exec django-app-local-server python manage.py runscript integration_tests_inject_data
+  echo "inject data config copied to /src directory"
+  docker cp django-app-local-server:/code/inject_data_config.json .
+}
+
+stopLocalServer() {
+  cd /home/root/deploy/localsim/latest && docker-compose down -v -t0
+  cd /home/root/deploy/local-server/latest && docker-compose down -v -t0
+  # Stop anything related to frontend thay might be on memory still
+  ps aux --sort=-%mem | head | grep frontend  | awk '{print $2}' | xargs kill -9
+}
+
