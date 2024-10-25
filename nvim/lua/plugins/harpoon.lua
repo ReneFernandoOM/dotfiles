@@ -10,12 +10,19 @@ return {
     -- quick navigation to harpoon files
     vim.keymap.set("n", "<C-y>", function()
       harpoon_ui.nav_file(1)
+      vim.api.nvim_feedkeys("zz", "normal", false)
     end)
     vim.keymap.set("n", "<C-n>", function()
       harpoon_ui.nav_file(2)
+      vim.api.nvim_feedkeys("zz", "normal", false)
     end)
     vim.keymap.set("n", "<C-m>", function()
       harpoon_ui.nav_file(3)
+      vim.api.nvim_feedkeys("zz", "normal", false)
+    end)
+    vim.keymap.set("n", "<C-q>", function()
+      harpoon_ui.nav_file(4)
+      vim.api.nvim_feedkeys("zz", "normal", false)
     end)
   end,
 }

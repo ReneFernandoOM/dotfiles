@@ -1,11 +1,14 @@
 return {
-	"numToStr/Comment.nvim",
-	dependencies = {
-		"JoosepAlviste/nvim-ts-context-commentstring",
-	},
-	lazy = false,
-	opts = function()
-		local commentstring_avail, commentstring = pcall(require, "ts_context_commentstring.integrations.comment_nvim")
-		return commentstring_avail and commentstring and { pre_hook = commentstring.create_pre_hook() } or {}
-	end,
+  "JoosepAlviste/nvim-ts-context-commentstring",
+  dependencies = {
+    "numToStr/Comment.nvim",
+  },
+  config = function()
+    require('ts_context_commentstring').setup {
+      enable_autocmd = false,
+    }
+    require('Comment').setup {
+      pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+    }
+  end
 }

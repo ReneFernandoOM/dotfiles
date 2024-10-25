@@ -20,7 +20,6 @@ return {
 
     vim.api.nvim_create_user_command("WeeklyEntry", function()
       local date = os.date("%G-w%V", os.time())
-      ---@type obsidian.Cient
       local client = obsidian.get_client()
 
       --create new note and add metadata
@@ -70,6 +69,11 @@ return {
         end,
       },
     },
+
+    follow_url_func = function(url)
+      -- Open the URL in the default web browser.
+      vim.fn.jobstart({ "xdg-open", url })
+    end,
 
     preferred_link_style = "markdown",
     ---@param title string|?

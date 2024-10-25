@@ -6,13 +6,13 @@ return {
     -- Keeps the context of the function at the top
     "nvim-treesitter/nvim-treesitter-context",
     -- Allows to define which comments to use dinamically
-    "JoosepAlviste/nvim-ts-context-commentstring",
     -- Auto close/rename html tags
     "windwp/nvim-ts-autotag",
   },
   build = ":TSUpdate",
   config = function()
     local configs = require("nvim-treesitter.configs")
+    ---@diagnostic disable-next-line: missing-fields
     configs.setup({
       -- Add languages to be installed here that you want installed for treesitter
       ensure_installed = {
@@ -27,11 +27,16 @@ return {
         "html",
         "markdown",
         "markdown_inline",
+        "json",
       },
-
       auto_install = true,
 
-      highlight = { enable = true },
+      highlight = {
+        enable = true,
+        custom_captures = {
+          ["injection.include-children"] = true,
+        },
+      },
       indent = { enable = true, disable = { "python" } },
       incremental_selection = {
         enable = true,
@@ -89,9 +94,6 @@ return {
             ["<leader>A"] = "@parameter.inner",
           },
         },
-      },
-      context_commentstring = {
-        enable = true,
       },
       autotag = {
         enable = true,
