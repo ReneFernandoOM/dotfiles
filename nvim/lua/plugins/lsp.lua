@@ -1,27 +1,3 @@
-local on_attach = function(client, bufnr)
-  local nmap = function(keys, func, desc)
-    if desc then
-      desc = "LSP: " .. desc
-    end
-    vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-  end
-
-  nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
-  nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
-
-  -- nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
-  nmap("gd", require("telescope.builtin").lsp_definitions, "[G]oto [D]efinition")
-  nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")
-  nmap("gI", vim.lsp.buf.implementation, "[G]oto [I]mplementation")
-  nmap("<leader>D", vim.lsp.buf.type_definition, "Type [D]efinition")
-  nmap("<leader>ds", require("telescope.builtin").lsp_document_symbols, "[D]ocument [S]ymbols")
-  nmap("<leader>ws", require("telescope.builtin").lsp_dynamic_workspace_symbols, "[W]orkspace [S]ymbols")
-  -- nmap('<leader>ws', require('telescope.builtin').lsp_workspace_symbols, '[W]orkspace [S]ymbols')
-
-  nmap("K", vim.lsp.buf.hover, "Hover Documentation")
-  nmap("<C-s>", vim.lsp.buf.signature_help, "Signature Documentation")
-end
-
 return {
   -- LSP Configuration & Plugins
   "neovim/nvim-lspconfig",
@@ -31,7 +7,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
 
     -- Useful status updates for LSP
-    { "j-hui/fidget.nvim", opts = {} },
+    { "j-hui/fidget.nvim",       opts = {} },
 
     -- Additional lua configuration, makes nvim stuff amazing!
     "folke/neodev.nvim",
@@ -58,12 +34,16 @@ return {
     local mason_lspconfig = require("mason-lspconfig")
 
     local servers = {
-      -- clangd = {},
-      -- gopls = {},
-      -- pyright = {},
-      -- rust_analyzer = {},
+      gopls = {
+        gopls = {
+          -- Don't autocomplete functions with (), other lsp's dont do it so I'm used to it
+          completeFunctionCalls = false,
+        },
+      },
+      jsonls = {},
+      markdown_oxide = {},
+      pyright = {},
       -- tsserver = {},
-
       lua_ls = {
         Lua = {
           workspace = { checkThirdParty = false },
@@ -80,7 +60,7 @@ return {
       function(server_name)
         require("lspconfig")[server_name].setup({
           capabilities = capabilities,
-          on_attach = on_attach,
+          on_attach = require("core.utils").OnLspAttach,
           settings = servers[server_name],
         })
       end,
@@ -141,7 +121,6 @@ return {
         local client_id = args.data.client_id
         local client = vim.lsp.get_client_by_id(client_id)
         local bufnr = args.buf
-        local buf_ft = vim.bo.filetype
 
         if client == nil or bufnr == nil then
           return
@@ -157,8 +136,8 @@ return {
               return
             end
 
-            -- Tsserver usually works poorly.
-            if client.name == "tsserver" then
+            -- I use prettier to formar
+            if client.name == "typescript-tools" then
               return
             end
             -- From the format_is_enabled variable defined above
