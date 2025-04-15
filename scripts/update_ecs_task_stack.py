@@ -41,10 +41,31 @@ def container_running():
     return containers and ANSIBLE_CONTAINER in containers.splitlines()
 
 
+def container_is_stopped():
+    # Returns True if exists but not running
+    containers = run("docker ps -a --format '{{.Names}}'", capture_output=True)
+    print(f"Containers: {containers}")
+    if containers and ANSIBLE_CONTAINER not in containers.splitlines():
+        return False
+    running = run("docker ps --format '{{.Names}}'", capture_output=True)
+
+    # No containers running
+    if not running:
+        return True
+
+    return ANSIBLE_CONTAINER not in running.splitlines()
+
+
 def start_ansible_container():
     if container_running():
         print("Ansible container already running.")
         return
+
+    if container_is_stopped():
+        print("Restarting container")
+        run(f"docker start {ANSIBLE_CONTAINER}")
+        return
+
     print("Starting ansible container...")
     run(f"docker run -d --name {ANSIBLE_CONTAINER} {ANSIBLE_IMAGE}")
 
