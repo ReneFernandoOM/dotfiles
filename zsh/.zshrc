@@ -111,40 +111,40 @@ source $ZSH/oh-my-zsh.sh
 #eval "$(pyenv init -)"
 
 # Set alias for tmux to grab the default configuartion from .config folder
-alias tmux="tmux -f $HOME/.config/tmux/tmux.conf"
+# alias tmux="tmux -f $HOME/.config/tmux/tmux.conf"
 
-open-dir-in-tmux () {
-  selected=$(find ~/Documents/elementary ~/Documents/personal ~/.config -mindepth 1 -maxdepth 1 -type d | fzf)
-  if [[ -z $selected ]]; then
-    exit 0
-  fi
-
-  selected_name=$(basename "$selected" | tr . _)
-  tmux_running=$(pgrep tmux)
-
-  if [[ -z $tmux_running ]]; then
-    tmux new-session -s $selected_name -c $selected
-  fi
-
-  if ! tmux has-session -t=$selected_name 2> /dev/null; then
-    tmux new-session -ds $selected_name -c $selected
-  fi
-
-  zle push-line
-  if [[ -z $TMUX ]]; then
-    BUFFER="tmux attach -t $selected_name"
-  else
-    BUFFER="tmux switch-client -t $selected_name" 
-  fi
-
-  zle accept-line
-  return $?
-
-}
-zle -N open-dir-in-tmux
-bindkey -M emacs '^F' open-dir-in-tmux
-bindkey -M vicmd '^F' open-dir-in-tmux
-bindkey -M viins '^F' open-dir-in-tmux
+# open-dir-in-tmux () {
+#   selected=$(find ~/Documents/elementary ~/Documents/personal ~/.config -mindepth 1 -maxdepth 1 -type d | fzf)
+#   if [[ -z $selected ]]; then
+#     exit 0
+#   fi
+#
+#   selected_name=$(basename "$selected" | tr . _)
+#   tmux_running=$(pgrep tmux)
+#
+#   if [[ -z $tmux_running ]]; then
+#     tmux new-session -s $selected_name -c $selected
+#   fi
+#
+#   if ! tmux has-session -t=$selected_name 2> /dev/null; then
+#     tmux new-session -ds $selected_name -c $selected
+#   fi
+#
+#   zle push-line
+#   if [[ -z $TMUX ]]; then
+#     BUFFER="tmux attach -t $selected_name"
+#   else
+#     BUFFER="tmux switch-client -t $selected_name" 
+#   fi
+#
+#   zle accept-line
+#   return $?
+#
+# }
+# zle -N open-dir-in-tmux
+# bindkey -M emacs '^F' open-dir-in-tmux
+# bindkey -M vicmd '^F' open-dir-in-tmux
+# bindkey -M viins '^F' open-dir-in-tmux
 
 
 dksh() {
@@ -158,28 +158,6 @@ export PATH=$PATH:/usr/local/go/bin
 
 export PATH="$PATH:/usr/local/nvim/bin"
 export PATH="$PATH:/$HOME/go/bin"
-
-# Ansible tests aliases
-updateDjangoDb() {
-  cd ~/Documents/elementary/ansible-config/tests/integration-tests/
-  docker cp integration_tests_clean_dbs.py django-app-local-server:/code/scripts
-  docker cp integration_tests_inject_data.py django-app-local-server:/code/scripts
-  cd src
-  docker cp ./base_inject_data_config.json django-app-local-server:/code
-  echo "files copied to django container"
-  docker exec django-app-local-server python manage.py runscript integration_tests_clean_dbs
-  docker exec django-app-local-server python manage.py runscript integration_tests_inject_data
-  echo "inject data config copied to /src directory"
-  docker cp django-app-local-server:/code/inject_data_config.json .
-}
-
-stopLocalServer() {
-  cd /home/root/deploy/localsim/latest && docker-compose down -v -t0
-  cd /home/root/deploy/local-server/latest && docker-compose down -v -t0
-  # Stop anything related to frontend thay might be on memory still
-  ps aux --sort=-%mem | head | grep frontend  | awk '{print $2}' | xargs kill -9
-}
-
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
