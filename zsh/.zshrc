@@ -148,7 +148,7 @@ source $ZSH/oh-my-zsh.sh
 
 
 dksh() {
-  docker exec -it $1 bash
+  sudo docker exec -it $1 bash
 }
 
 export PATH=$PATH:/usr/local/go/bin
