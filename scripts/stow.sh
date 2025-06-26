@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd ~/Documents/personal/dotfiles
+cd ~/dev/personal/dotfiles
 
 # Helper function to safely stow configs
 safe_stow() {

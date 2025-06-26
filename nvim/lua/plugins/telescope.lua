@@ -81,7 +81,7 @@ return {
 
     -- Speial Keymaps for obsidian
     vim.keymap.set("n", "<leader>sg", function()
-      if utils.getGitRootDir() == "/home/rene/Documents/personal/ObsidianVault" then
+      if utils.getGitRootDir() == "/home/rene/dev/personal/ObsidianVault" then
         return "<cmd>ObsidianSearch<CR>"
       else
         return "<cmd>Telescope live_grep<CR>"

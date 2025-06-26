@@ -56,7 +56,7 @@ local dualModKeys = helpers.withExtraModBatch('CTRL',
         mods = 'LEADER',
         action = act.SwitchToWorkspace {
             name = "dotfiles",
-            spawn = { cwd = os.getenv("HOME") .. "/Documents/personal/dotfiles/" }
+            spawn = { cwd = os.getenv("HOME") .. "/dev/personal/dotfiles/" }
         }
     },
     {
@@ -64,7 +64,7 @@ local dualModKeys = helpers.withExtraModBatch('CTRL',
         mods = 'LEADER',
         action = act.SwitchToWorkspace {
             name = "data-strctures-and-algorithms",
-            spawn = { cwd = os.getenv("HOME") .. "/Documents/personal/data-strctures-and-algorithms/" }
+            spawn = { cwd = os.getenv("HOME") .. "/dev/personal/data-strctures-and-algorithms/" }
         }
     },
     -- Show the launcher in fuzzy selection mode and have it list all workspaces
