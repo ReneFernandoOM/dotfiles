@@ -23,5 +23,6 @@ safe_stow "$HOME/.config/i3" i3
 safe_stow "$HOME/.config/polybar" polybar
 safe_stow "$HOME/.config/picom" picom
 safe_stow "$HOME" zsh
+safe_stow "$HOME" p10k
 
 echo "✅ Dotfiles successfully stowed."
