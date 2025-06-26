@@ -179,6 +179,8 @@ bindsym $mod+Control+h move workspace to output left
 bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
+
+bindsym $mod+Shift+s exec autorandr -c --force
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
 
@@ -223,14 +225,14 @@ default_border pixel 0
 default_floating_border pixel 0
 
 # xrandr config
-exec_always --no-startup-id xrandr \
-    --output DP-1 --mode 1920x1080 --pos 0x0 --rate 143.85 \
-    --output DP-2-3 --mode 2560x1440 --pos 1920x0 --rate 59.95 --primary \
-    --output DP-2-2 --mode 1920x1080 --pos 4480x0 --rotate right \
-    --output eDP-1 --off \
-    --output DP-2 --off \
-    --output DP-3 --off \
-    --output DP-2-1 --off
+# exec_always --no-startup-id xrandr \
+#     --output DP-1 --mode 1920x1080 --pos 0x0 --rate 143.85 --active \
+#     --output DP-2-3 --mode 2560x1440 --pos 1920x0 --rate 59.95 --primary \
+#     --output DP-2-2 --mode 1920x1080 --pos 4480x0 --rotate right \
+#     --output eDP-1 --off \
+#     --output DP-2 --off \
+#     --output DP-3 --off \
+#     --output DP-2-1 --off
 
 # Keyboard layout
 exec_always --no-startup-id setxkbmap -layout us
