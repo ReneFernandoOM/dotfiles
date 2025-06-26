@@ -50,6 +50,23 @@ local dualModKeys = helpers.withExtraModBatch('CTRL',
         mods = 'LEADER',
         action = wezterm.action_callback(session_manager.switchToWorkspaceAction)
     },
+    { key = 'Enter', mods = 'LEADER', action = act.ActivateCopyMode },
+    {
+        key = 'o',
+        mods = 'LEADER',
+        action = act.SwitchToWorkspace {
+            name = "dotfiles",
+            spawn = { cwd = os.getenv("HOME") .. "/Documents/personal/dotfiles/" }
+        }
+    },
+    {
+        key = 'p',
+        mods = 'LEADER',
+        action = act.SwitchToWorkspace {
+            name = "data-strctures-and-algorithms",
+            spawn = { cwd = os.getenv("HOME") .. "/Documents/personal/data-strctures-and-algorithms/" }
+        }
+    },
     -- Show the launcher in fuzzy selection mode and have it list all workspaces
     -- and allow activating one.
     {
