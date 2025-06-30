@@ -93,5 +93,5 @@ local function toggleDetails()
   end
 end
 
-wifi:subscribe("mouse.entered", toggleDetails)
-wifi:subscribe("mouse.exited", toggleDetails)
+-- wifi:subscribe("mouse.entered", toggleDetails)
+-- wifi:subscribe("mouse.exited", toggleDetails)
