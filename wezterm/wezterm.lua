@@ -19,7 +19,8 @@ config.tab_bar_at_bottom = true
 config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
 
 config.keys = {
-    { key = 'r', mods = 'LEADER',       action = act.ReloadConfiguration },
+    { key = 'l', mods = 'LEADER',       action = act.ReloadConfiguration },
+    { key = 'z', mods = 'LEADER',       action = act.TogglePaneZoomState },
     { key = 'c', mods = 'LEADER',       action = act.SpawnTab('CurrentPaneDomain') },
     { key = '|', mods = 'LEADER|SHIFT', action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
     { key = '-', mods = 'LEADER',       action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
@@ -65,6 +66,22 @@ local dualModKeys = helpers.withExtraModBatch('CTRL',
         action = act.SwitchToWorkspace {
             name = "data-strctures-and-algorithms",
             spawn = { cwd = os.getenv("HOME") .. "/dev/personal/data-strctures-and-algorithms/" }
+        }
+    },
+    {
+        key = 'r',
+        mods = 'LEADER',
+        action = act.SwitchToWorkspace {
+            name = "svc-managed-payroll-control-plane",
+            spawn = { cwd = os.getenv("HOME") .. "/dev/earnin/svc-managed-payroll-control-plane/", }
+        }
+    },
+    {
+        key = 'e',
+        mods = 'LEADER',
+        action = act.SwitchToWorkspace {
+            name = "svc-managed-payroll-data-plane",
+            spawn = { cwd = os.getenv("HOME") .. "/dev/earnin/svc-managed-payroll-data-plane/", }
         }
     },
     -- Show the launcher in fuzzy selection mode and have it list all workspaces

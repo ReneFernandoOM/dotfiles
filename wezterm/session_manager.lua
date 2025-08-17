@@ -8,7 +8,7 @@ end)
 local M = {}
 
 function M.switchToWorkspaceAction(window, pane)
-    local success, stdout, stderr = wezterm.run_child_process { 'zsh', '-c', 'find ~/dev/personal/ -maxdepth 1 -mindepth 1 -type d ' }
+    local success, stdout, stderr = wezterm.run_child_process { 'zsh', '-c', 'find ~/dev/personal/ ~/dev/earnin/  -maxdepth 1 -mindepth 1 -type d ' }
 
     local choices = {}
     if success and stdout then
