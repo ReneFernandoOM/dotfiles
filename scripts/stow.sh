@@ -30,5 +30,6 @@ safe_stow "$HOME" p10k
 # mac based
 safe_stow "$HOME/.config/aerospace" aerospace
 safe_stow "$HOME/.config/sketchybar" sketchybar
+safe_stow "$HOME/.config/karabiner" karabiner
 
 echo "✅ Dotfiles successfully stowed."
