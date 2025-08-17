@@ -10,10 +10,9 @@ return {
     null_ls.setup({
       debug = true,
       sources = {
-        -- Typescript
-        formatting.prettierd.with({
-          prefer_local = "node_modules/.bin",
-        }),
+        formatting.prettier,
+
+        -- typescript
         require("none-ls.diagnostics.eslint_d"),
         require("none-ls.code_actions.eslint_d"),
         -- Python
@@ -21,6 +20,7 @@ return {
         require("none-ls.diagnostics.ruff"),
         -- Lua
         formatting.stylua,
+
       },
     })
   end,
