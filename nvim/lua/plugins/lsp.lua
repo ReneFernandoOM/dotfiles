@@ -40,6 +40,23 @@ return {
           completeFunctionCalls = false,
         },
       },
+      spectral = {
+        rulesetFile = vim.fn.getcwd() .. "/.spectral.yaml",
+      },
+      yamlls = {
+        settings = {
+          yaml = {
+            schemas = {
+              -- Use OpenAPI v3 JSON schema only for files matching openapi YAML pattern
+              ["https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/schemas/v3.0/schema.json"] = { "/*openapi*.yaml", "/*openapi*.yml" },
+            },
+            validate = false, -- Disable yamlls validation so spectral can handle it
+            hover = true,
+            completion = true,
+          },
+        },
+        filetypes = { "yaml", "yml" },
+      },
       jsonls = {},
       markdown_oxide = {},
       pyright = {},
