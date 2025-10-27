@@ -69,7 +69,7 @@ automatically-unhide-macos-hidden-apps = false
     inner.vertical =   10
     outer.left =       15
     outer.bottom =     10
-    outer.top =        [{ monitor.main = 35 }, 10]
+    outer.top =        [{ monitor."built-in" = 10 }, 35]
     outer.right =      15
 
 # 'main' binding mode declaration
@@ -157,7 +157,7 @@ automatically-unhide-macos-hidden-apps = false
     alt-ctrl-8 = ['move-node-to-workspace 8', 'workspace 8']
     alt-ctrl-9 = ['move-node-to-workspace 9', 'workspace 9']
 
-    alt-f = 'fullscreen'
+    alt-shift-f = 'fullscreen'
     alt-shift-q = 'close'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor

@@ -75,6 +75,14 @@ local dualModKeys = helpers.withExtraModBatch('CTRL',
         }
     },
     {
+        key = 'i',
+        mods = 'LEADER',
+        action = act.SwitchToWorkspace {
+            name = "go-bananas",
+            spawn = { cwd = os.getenv("HOME") .. "/dev/personal/go-bananas/" }
+        }
+    },
+    {
         key = 'p',
         mods = 'LEADER',
         action = act.SwitchToWorkspace {
