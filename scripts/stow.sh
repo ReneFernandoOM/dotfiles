@@ -21,6 +21,7 @@ safe_stow "$HOME/.config/nvim" nvim
 safe_stow "$HOME/.config/wezterm" wezterm
 safe_stow "$HOME" zsh
 safe_stow "$HOME" p10k
+safe_stow "$HOME/.codex" codex
 
 # linux based
 # safe_stow "$HOME/.config/i3" i3

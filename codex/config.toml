@@ -1,0 +1,8 @@
+# Recall that in TOML, root keys must be listed before tables.
+model = "gpt-5"
+model_provider = "openai"
+model_reasoning_effort = "high"
+approval_policy = "never"
+model_reasoning_summary = "detailed"
+sandbox_mode = "danger-full-access"
+disable_response_storage = false
