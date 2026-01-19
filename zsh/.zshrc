@@ -147,6 +147,12 @@ source $ZSH/oh-my-zsh.sh
 # bindkey -M vicmd '^F' open-dir-in-tmux
 # bindkey -M viins '^F' open-dir-in-tmux
 
+export EDITOR=nvim
+export VISUAL=nvim
+
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '^x^e' edit-command-line
 
 dksh() {
   sudo docker exec -it $1 bash
@@ -161,6 +167,8 @@ export PATH=$HOME/.local/lib/node_modules/.bin:$PATH
 
 export PATH="$PATH:/usr/local/nvim/bin"
 export PATH="$PATH:/$HOME/go/bin"
+export PATH="$PATH:$HOME/.local/bin"
+
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -170,3 +178,5 @@ source <(fzf --zsh)
 eval "$(direnv hook zsh)"
 
 [[ -f "$HOME/dev/personal/dotfiles/work/work.sh" ]] && source "$HOME/dev/personal/dotfiles/work/work.sh"
+
+
