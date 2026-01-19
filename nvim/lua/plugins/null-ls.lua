@@ -6,10 +6,11 @@ return {
     local null_ls = require("null-ls")
 
     local formatting = null_ls.builtins.formatting
+    local code_actions = require("core.code_actions").get(null_ls)
 
     null_ls.setup({
       debug = true,
-      sources = {
+      sources = vim.list_extend({
         formatting.prettier,
 
         -- typescript
@@ -20,8 +21,7 @@ return {
         require("none-ls.diagnostics.ruff"),
         -- Lua
         formatting.stylua,
-
-      },
+      }, code_actions),
     })
   end,
 }
