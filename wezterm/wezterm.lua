@@ -12,6 +12,7 @@ config.window_padding = {
     top = 0,
     bottom = 0,
 }
+config.color_scheme = 'Gruvbox dark, pale (base16)'
 
 config.window_decorations = 'RESIZE'
 config.tab_bar_at_bottom = true
