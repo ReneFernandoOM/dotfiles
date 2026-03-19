@@ -148,8 +148,8 @@ return {
           group = get_formatting_augroup(client),
           buffer = bufnr,
           callback = function()
-            -- Only attach to clients that support document formatting
-            if not client.server_capabilities.documentFormattingProvider then
+            -- Only attach to clients that support document formatting for this buffer
+            if not client.supports_method("textDocument/formatting") then
               return
             end
 
