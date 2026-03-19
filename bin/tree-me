@@ -1,0 +1,356 @@
+#!/usr/bin/env bash
+# Minimal git worktree helper - leverages git's native capabilities
+# Usage: tree-me <command> [options]
+#
+# For tab completion, add this to your ~/.bashrc or ~/.zshrc:
+#   source <(tree-me shellenv)
+#
+# This enables:
+# - Tab completion for commands and branch names
+
+set -e
+
+WORKTREE_ROOT="${WORKTREE_ROOT:-$HOME/dev/earnin}"
+
+# Show help if no arguments
+show_help() {
+    cat << 'EOF'
+Usage: tree-me <command> [options]
+
+Git-like worktree management with organized directory structure.
+
+Commands:
+  switch, sw <branch>           Switch to an existing branch in new worktree
+  create <branch> [base]        Create new branch in worktree (default: main/master)
+  pr <number|url>               Checkout GitHub PR in worktree (uses gh)
+  list, ls                      List all worktrees
+  remove, rm <branch> [options] Remove a worktree (passes options to git worktree remove)
+  prune                         Remove worktree administrative files
+  shellenv                      Output shell function for completion (source this)
+
+Examples:
+  tree-me switch feature-branch
+  tree-me create my-feature
+  tree-me create my-feature develop
+  tree-me pr 123
+  tree-me pr https://github.com/org/repo/pull/123
+  tree-me list
+  tree-me remove old-branch
+  tree-me rm old-branch --force
+  tree-me prune
+
+Setup completion:
+  Add to ~/.bashrc or ~/.zshrc:
+    source <(tree-me shellenv)
+
+Worktrees are organized at: $WORKTREE_ROOT/<repo>/<branch>
+Set WORKTREE_ROOT to customize the location (default: ~/dev/earnin)
+
+EOF
+}
+
+if [ $# -eq 0 ]; then
+    show_help
+    exit 0
+fi
+
+# Get repo root from git (supports regular, bare, and worktree repos)
+get_repo_root() {
+    local common_dir repo_root toplevel
+
+    common_dir=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+    common_dir="${common_dir%/}"
+    if [ -n "$common_dir" ]; then
+        if [ "${common_dir##*/}" = ".git" ]; then
+            repo_root="${common_dir%/.git}"
+        else
+            repo_root="$common_dir"
+        fi
+        echo "$repo_root"
+        return
+    fi
+
+    toplevel=$(git rev-parse --show-toplevel 2>/dev/null || true)
+    if [ -n "$toplevel" ]; then
+        echo "$toplevel"
+        return
+    fi
+
+    echo ""
+}
+
+# Get repo name from git
+get_repo_name() {
+    local repo_root remote_url
+
+    repo_root=$(get_repo_root)
+    if [ -n "$repo_root" ]; then
+        basename "$repo_root"
+        return
+    fi
+
+    remote_url=$(git remote get-url origin 2>/dev/null || true)
+    basename "$remote_url" .git
+}
+
+# Get default base branch
+get_default_base() {
+    git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo main
+}
+
+# Resolve create base to prefer remote-tracking refs when available.
+resolve_create_base() {
+    local requested_base="$1"
+
+    # Honor explicit remote or full refs as-is.
+    if [[ "$requested_base" == origin/* || "$requested_base" == refs/* ]]; then
+        echo "$requested_base"
+        return
+    fi
+
+    if git show-ref --verify --quiet "refs/remotes/origin/$requested_base"; then
+        echo "origin/$requested_base"
+    else
+        echo "$requested_base"
+    fi
+}
+
+initialize_env_files() {
+    local worktree_path="$1"
+
+    if [ ! -f "$worktree_path/.env" ]; then
+        touch "$worktree_path/.env"
+    fi
+
+    if [ ! -f "$worktree_path/.envrc" ]; then
+        cat > "$worktree_path/.envrc" << 'EOF'
+source_up .envrc
+dotenv
+EOF
+    fi
+
+    if command -v direnv >/dev/null 2>&1; then
+        if (cd "$worktree_path" && direnv allow .); then
+            echo "✓ direnv allowed in: $worktree_path"
+        else
+            echo "Warning: Failed to run 'direnv allow .' in: $worktree_path" >&2
+        fi
+    else
+        echo "Warning: 'direnv' not found; skipping 'direnv allow .'" >&2
+    fi
+}
+
+copy_agents_file() {
+    local worktree_path="$1"
+
+    if [ -n "$SOURCE_REPO_ROOT" ] && [ -f "$SOURCE_REPO_ROOT/AGENTS.md" ] && [ ! -e "$worktree_path/AGENTS.md" ]; then
+        cp "$SOURCE_REPO_ROOT/AGENTS.md" "$worktree_path/AGENTS.md"
+        echo "✓ Copied AGENTS.md to: $worktree_path"
+    fi
+}
+
+# Extract PR number from URL or number
+get_pr_number() {
+    local input="$1"
+    if [[ "$input" =~ ^https://github.com/.*/pull/([0-9]+) ]]; then
+        echo "${BASH_REMATCH[1]}"
+    elif [[ "$input" =~ ^[0-9]+$ ]]; then
+        echo "$input"
+    else
+        echo "Error: Invalid PR number or URL: $input" >&2
+        exit 1
+    fi
+}
+
+repo=$(get_repo_name)
+SOURCE_REPO_ROOT=$(get_repo_root)
+command="$1"
+shift
+
+case "$command" in
+    shellenv)
+        cat << 'EOF'
+tree-me() {
+    command tree-me "$@"
+}
+
+# Bash completion
+if [ -n "$BASH_VERSION" ]; then
+    _tree_me_complete() {
+        local cur prev commands
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        prev="${COMP_WORDS[COMP_CWORD-1]}"
+        commands="switch sw create pr list ls remove rm prune help shellenv"
+
+        # Complete commands if first argument
+        if [ $COMP_CWORD -eq 1 ]; then
+            COMPREPLY=( $(compgen -W "$commands" -- "$cur") )
+            return 0
+        fi
+
+        # Complete branch names for switch/remove/rm
+        case "$prev" in
+            co|checkout|switch|sw|remove|rm)
+                local branches
+                branches=$(git worktree list 2>/dev/null | sed -n 's/.*\[\([^]]*\)\].*/\1/p' | tail -n +2)
+                COMPREPLY=( $(compgen -W "$branches" -- "$cur") )
+                return 0
+                ;;
+        esac
+    }
+    complete -F _tree_me_complete tree-me
+fi
+
+# Zsh completion
+if [ -n "$ZSH_VERSION" ]; then
+    _tree_me_complete_zsh() {
+        local -a commands branches
+        commands=(
+            'switch:Switch to an existing branch in new worktree'
+            'sw:Switch to an existing branch in new worktree'
+            'create:Create new branch in worktree'
+            'pr:Checkout GitHub PR in worktree'
+            'list:List all worktrees'
+            'ls:List all worktrees'
+            'remove:Remove a worktree'
+            'rm:Remove a worktree'
+            'prune:Remove worktree administrative files'
+            'help:Show help'
+            'shellenv:Output shell function for completion'
+        )
+
+        if (( CURRENT == 2 )); then
+            _describe 'command' commands
+        elif (( CURRENT == 3 )); then
+            case "$words[2]" in
+                checkout|co|switch|sw|remove|rm)
+                    branches=(${(f)"$(git worktree list 2>/dev/null | sed -n 's/.*\[\([^]]*\)\].*/\1/p' | tail -n +1)"})
+                    _describe 'branch' branches
+                    ;;
+            esac
+        fi
+    }
+    compdef _tree_me_complete_zsh tree-me
+fi
+EOF
+        ;;
+
+    checkout|co|switch|sw)
+        branch="${1:?Branch name required. Usage: tree-me switch <branch>}"
+        path="$WORKTREE_ROOT/$repo/$branch"
+
+        # Check if worktree already exists
+        if git worktree list | grep -q "\[$branch\]"; then
+            existing=$(git worktree list | grep "\[$branch\]" | awk '{print $1}')
+            echo "✓ Worktree already exists: $existing"
+            exit 0
+        fi
+
+        # Check if branch exists
+        if git show-ref --verify --quiet "refs/heads/$branch" || \
+           git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+            git worktree add "$path" "$branch"
+            copy_agents_file "$path"
+            echo "✓ Worktree created at: $path"
+        else
+            echo "Error: Branch '$branch' does not exist" >&2
+            echo "Use 'tree-me create $branch' to create a new branch" >&2
+            exit 1
+        fi
+        ;;
+
+    create)
+        branch="${1:?Branch name required. Usage: tree-me create <branch> [base-branch]}"
+        requested_base="${2:-$(get_default_base)}"
+        base="$(resolve_create_base "$requested_base")"
+        path="$WORKTREE_ROOT/$repo/$branch"
+
+        # Check if worktree already exists
+        if git worktree list | grep -q "\[$branch\]"; then
+            existing=$(git worktree list | grep "\[$branch\]" | awk '{print $1}')
+            echo "✓ Worktree already exists: $existing"
+            exit 0
+        fi
+
+        # Create new branch, or reuse existing local branch
+        if git show-ref --verify --quiet "refs/heads/$branch"; then
+            git worktree add "$path" "$branch"
+            echo "ℹ Branch '$branch' already existed; attached existing branch"
+        else
+            if [ "$base" != "$requested_base" ]; then
+                echo "ℹ Using '$base' as base (latest from origin)"
+            fi
+            git worktree add "$path" -b "$branch" "$base"
+        fi
+
+        # Initialize env files for new worktree
+        initialize_env_files "$path"
+        copy_agents_file "$path"
+
+        echo "✓ Worktree created at: $path"
+        ;;
+
+    pr)
+        input="${1:?PR number or URL required. Usage: tree-me pr <number|url>}"
+        pr_number=$(get_pr_number "$input")
+
+        # Check if gh is installed
+        if ! command -v gh >/dev/null 2>&1; then
+            echo "Error: 'gh' CLI not found. Install it from https://cli.github.com" >&2
+            exit 1
+        fi
+
+        # Use gh to checkout PR in a worktree
+        branch="pr-$pr_number"
+        path="$WORKTREE_ROOT/$repo/$branch"
+
+        # Check if worktree already exists
+        if git worktree list | grep -q "\[$branch\]"; then
+            existing=$(git worktree list | grep "\[$branch\]" | awk '{print $1}')
+            echo "✓ Worktree already exists: $existing"
+            exit 0
+        fi
+
+        # Fetch the PR and create worktree
+        git fetch origin "pull/$pr_number/head:$branch" 2>/dev/null || true
+        git worktree add "$path" "$branch"
+
+        # Initialize env files for new worktree
+        initialize_env_files "$path"
+        copy_agents_file "$path"
+
+        echo "✓ PR #$pr_number checked out at: $path"
+        ;;
+
+    list|ls)
+        git worktree list
+        ;;
+
+    remove|rm)
+        branch="${1:?Branch name required. Usage: tree-me remove <branch> [options]}"
+        shift
+        existing=$(git worktree list | grep "\[$branch\]" | awk '{print $1}')
+        if [ -z "$existing" ]; then
+            echo "Error: No worktree found for branch: $branch" >&2
+            exit 1
+        fi
+        git worktree remove "$@" "$existing"
+        echo "✓ Removed worktree: $existing"
+        ;;
+
+    prune)
+        git worktree prune
+        echo "✓ Pruned stale worktree administrative files"
+        ;;
+
+    help|--help|-h)
+        show_help
+        ;;
+
+    *)
+        echo "Error: Unknown command '$command'" >&2
+        echo "Run 'tree-me help' for usage information" >&2
+        exit 1
+        ;;
+esac

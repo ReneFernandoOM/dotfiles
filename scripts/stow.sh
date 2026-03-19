@@ -22,6 +22,9 @@ safe_stow "$HOME/.config/wezterm" wezterm
 safe_stow "$HOME" zsh
 safe_stow "$HOME" p10k
 safe_stow "$HOME/.codex" codex
+safe_stow "$HOME/.config/opencode" opencode
+safe_stow "$HOME/.local/bin" bin
+safe_stow "$HOME/Library/LaunchAgents" launchagents
 
 # linux based
 # safe_stow "$HOME/.config/i3" i3

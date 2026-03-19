@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PATH="/run/current-system/sw/bin:/etc/profiles/per-user/$USER/bin:$HOME/.nix-profile/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+
+colima start --vm-type=vz --vz-rosetta
+
+max_attempts=60
+attempt=1
+until docker info >/dev/null 2>&1; do
+  if [ "$attempt" -ge "$max_attempts" ]; then
+    exit 1
+  fi
+  attempt=$((attempt + 1))
+  sleep 2
+done
+
+cd "$HOME/dev/personal/lite-llm"
+if command -v docker-compose >/dev/null 2>&1; then
+  docker-compose up -d
+else
+  docker compose up -d
+fi
