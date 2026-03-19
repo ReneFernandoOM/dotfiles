@@ -1,8 +1,15 @@
 # Recall that in TOML, root keys must be listed before tables.
-model = "gpt-5"
+model = "gpt-5.2-codex"
 model_provider = "openai"
-model_reasoning_effort = "high"
+model_reasoning_effort = "medium"
 approval_policy = "never"
 model_reasoning_summary = "detailed"
 sandbox_mode = "danger-full-access"
 disable_response_storage = false
+personality = "pragmatic"
+
+[notice]
+"hide_gpt-5.1-codex-max_migration_prompt" = true
+
+[notice.model_migrations]
+"gpt-5.1-codex-max" = "gpt-5.2-codex"
