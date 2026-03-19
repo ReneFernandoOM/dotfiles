@@ -18,7 +18,7 @@ local function go_test_selection(null_ls)
           line_text = vim.fn.getline(func_line)
         end
 
-        local test_name = line_text:match("^%s*func%s+(Test%w+)%s*%(")
+        local test_name = line_text:match("^%s*func%s+(Test[A-Za-z0-9_]+)%s*%(")
         if not test_name then
           test_name = "nearest test"
         end
@@ -36,7 +36,18 @@ local function go_test_selection(null_ls)
               end
 
               vim.cmd("botright new")
-              vim.fn.termopen({ "go", "test", "-run", "^" .. test_name .. "$" }, { cwd = cwd })
+              local buf = vim.api.nvim_get_current_buf()
+              vim.fn.termopen({ "go", "test", "-run", "^" .. test_name .. "$" }, {
+                cwd = cwd,
+                on_exit = function()
+                  vim.schedule(function()
+                    if vim.api.nvim_buf_is_valid(buf) then
+                      vim.api.nvim_set_current_buf(buf)
+                      vim.cmd("stopinsert")
+                    end
+                  end)
+                end,
+              })
               vim.cmd("startinsert")
             end,
           },
