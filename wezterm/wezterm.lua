@@ -66,6 +66,11 @@ local dualModKeys = helpers.withExtraModBatch('CTRL',
         mods = 'LEADER',
         action = wezterm.action_callback(session_manager.switchToWorkspaceAction)
     },
+    {
+        key = 'b',
+        mods = 'LEADER',
+        action = wezterm.action_callback(session_manager.switchToWorktreeAction)
+    },
     { key = 'Enter', mods = 'LEADER', action = act.ActivateCopyMode },
     {
         key = 'o',
@@ -95,8 +100,8 @@ local dualModKeys = helpers.withExtraModBatch('CTRL',
         key = 'r',
         mods = 'LEADER',
         action = act.SwitchToWorkspace {
-            name = "svc-managed-payroll-control-plane",
-            spawn = { cwd = os.getenv("HOME") .. "/dev/earnin/svc-managed-payroll-control-plane/", }
+            name = "control-plane",
+            spawn = { cwd = os.getenv("HOME") .. "/dev/earnin/control-plane/", }
         }
     },
     {
