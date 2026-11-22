@@ -6,11 +6,13 @@ return {
     vim.keymap.set('n', '<A-S-j>', require('smart-splits').resize_down)
     vim.keymap.set('n', '<A-S-k>', require('smart-splits').resize_up)
     vim.keymap.set('n', '<A-S-l>', require('smart-splits').resize_right)
-    -- moving between splits
-    vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
-    vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
-    vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
-    vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+    -- moving between splits; inside Rex, rex-navigator owns these keys
+    if vim.env.REX_SESSION == nil or vim.env.REX_SESSION == '' then
+      vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+      vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+      vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+      vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+    end
     vim.keymap.set('n', '<C-\\>', require('smart-splits').move_cursor_previous)
   end
 }

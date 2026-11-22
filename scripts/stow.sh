@@ -19,6 +19,7 @@ safe_stow() {
 
 safe_stow "$HOME/.config/nvim" nvim
 safe_stow "$HOME/.config/wezterm" wezterm
+safe_stow "$HOME/.config/rex" rex
 safe_stow "$HOME" zsh
 safe_stow "$HOME" p10k
 safe_stow "$HOME/.codex" codex
