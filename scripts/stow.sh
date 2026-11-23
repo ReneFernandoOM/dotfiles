@@ -23,6 +23,7 @@ safe_stow "$HOME/.config/rex" rex
 safe_stow "$HOME" zsh
 safe_stow "$HOME" p10k
 safe_stow "$HOME/.codex" codex
+safe_stow "$HOME/.cursor" cursor
 safe_stow "$HOME/.config/opencode" opencode
 safe_stow "$HOME/.local/bin" bin
 safe_stow "$HOME/Library/LaunchAgents" launchagents

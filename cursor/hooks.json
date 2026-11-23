@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeSubmitPrompt": [
+      { "command": "./hooks/rex-status.sh working", "timeout": 5 }
+    ],
+    "stop": [
+      { "command": "./hooks/rex-status.sh stop", "timeout": 5 }
+    ]
+  }
+}
