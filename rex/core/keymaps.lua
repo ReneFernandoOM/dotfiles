@@ -1,3 +1,5 @@
+local utils = require("core.utils")
+
 -- Leader ctrl+a
 rex.bind("ctrl+a>ctrl+a", "pane.send_key", { key = "ctrl+a" })
 rex.bind("ctrl+a>l", "client.config.reload")
@@ -12,4 +14,4 @@ for i = 1, 9 do
     rex.bind("ctrl+a>" .. i, "client.tab.goto", { index = i })
 end
 
-rex.bind("ctrl+a>enter", "pane.copy_mode.enter")
+utils.bind(utils.with_ctrl("ctrl+a>enter"), "pane.copy_mode.enter")

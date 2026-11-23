@@ -189,7 +189,7 @@ function M.setup(opts)
     })
 
     if M.options.keys.new then
-        rex.bind(M.options.keys.new, "git_worktree_new")
+        utils.bind(M.options.keys.new, "git_worktree_new")
     end
 end
 
